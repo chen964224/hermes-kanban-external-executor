@@ -107,14 +107,27 @@ explicit *"happy to reopen or resubmit … if there is upstream interest"*. Per 
 own contribution rubric, third-party integrations of this shape ship as a **standalone
 plugin** rather than as core surface — so this repo is that plugin.
 
-## Install
+## Install / status
 
-```bash
-git clone https://github.com/chen964224/hermes-kanban-external-executor \
-  ~/.hermes/plugins/kanban-external-executor
+**Status: protocol specification only — the executor code is not published yet.**
+What is here today is the contract (§1–§5), written so it can be implemented by any
+supervisor: ours, a future in-tree `harness` seam, or yours. The reference executor is
+being extracted from the production bridge; it will land as a config-driven plugin
+(`~/.hermes/plugins/kanban-external-executor`) rather than as a copy of the bridge,
+which is wired to one specific topology.
+
+If you want to implement the contract yourself in the meantime, §1–§5 is the whole
+specification — there is nothing else the supervisor needs to agree on.
+
 ```
-
-Then point it at your CLI and execution host in its config (see `config.example.json`).
+# planned layout
+kanban-external-executor/
+  plugin.py            # claim → run CLI on the execution host → read result → close
+  protocol.py          # scan_verdict / is_skeleton_doc / worker_last_words
+  guards.py            # empty-input (execution-host aware) / artifact sanity
+  redact.py            # capture redaction, keyed on the variable name
+  config.example.json  # cli command, execution host, lanes, timeouts
+```
 
 ## License
 
